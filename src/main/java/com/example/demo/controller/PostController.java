@@ -1,7 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.model.Post;
-import com.example.demo.service.JsonPlaceholderService;
+import com.example.demo.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PostController {
 
-    private final JsonPlaceholderService<Post> postService;
+    private final PostService postService;
 
     @GetMapping
     Mono<List<Post>> findAll() {

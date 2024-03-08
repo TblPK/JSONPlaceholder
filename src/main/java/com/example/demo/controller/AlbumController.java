@@ -1,7 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.model.Album;
-import com.example.demo.service.JsonPlaceholderService;
+import com.example.demo.service.AlbumService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AlbumController {
 
-    private final JsonPlaceholderService<Album> albumService;
+    private final AlbumService albumService;
 
     @GetMapping
     Mono<List<Album>> findAll() {

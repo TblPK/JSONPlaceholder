@@ -32,14 +32,6 @@ public class PostService implements JsonPlaceholderService<Post> {
                 .bodyToMono(Post.class);
     }
 
-    public Mono<Post> findByComments(String id) {
-        return webClient
-                .get()
-                .uri("/{method}/{id}/comments", HTTP_METHOD, id)
-                .retrieve()
-                .bodyToMono(Post.class);
-    }
-
     public Mono<Post> create(Post post) {
         return webClient
                 .post()
