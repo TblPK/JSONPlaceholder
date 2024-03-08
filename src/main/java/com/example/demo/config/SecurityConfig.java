@@ -1,5 +1,6 @@
 package com.example.demo.config;
 
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -16,13 +17,15 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        return http.authorizeHttpRequests(auth -> auth
+        return http
+                .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/posts/**").hasAnyRole("POSTS", "ADMIN")
                         .requestMatchers("/api/users/**").hasAnyRole("USERS", "ADMIN")
                         .requestMatchers("/api/albums/**").hasAnyRole("ALBUMS", "ADMIN")
-                        .requestMatchers("/login/**").anonymous()
+                        .requestMatchers(PathRequest.toH2Console()).hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
+                .csrf(csrf -> csrf.ignoringRequestMatchers(PathRequest.toH2Console()))
                 .formLogin(Customizer.withDefaults())
                 .httpBasic(Customizer.withDefaults())
                 .build();
@@ -33,9 +36,15 @@ public class SecurityConfig {
         UserDetails user = User.withDefaultPasswordEncoder()
                 .username("1")
                 .password("1")
-                .roles("POSTS")
+                .roles("ADMIN")
                 .build();
         return new InMemoryUserDetailsManager(user);
     }
+
+
+//    @Bean
+//    public PasswordEncoder passwordEncoder() {
+//        return new BCryptPasswordEncoder();
+//    }
 
 }
