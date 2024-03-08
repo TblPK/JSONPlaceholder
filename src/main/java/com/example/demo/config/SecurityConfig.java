@@ -6,6 +6,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
@@ -25,10 +27,11 @@ public class SecurityConfig {
                         .requestMatchers(PathRequest.toH2Console()).hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
-                .csrf(csrf -> csrf.ignoringRequestMatchers(PathRequest.toH2Console()))
+                .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
                 .formLogin(Customizer.withDefaults())
                 .httpBasic(Customizer.withDefaults())
                 .build();
+
     }
 
     @Bean
@@ -36,11 +39,15 @@ public class SecurityConfig {
         UserDetails user = User.withDefaultPasswordEncoder()
                 .username("1")
                 .password("1")
-                .roles("ADMIN")
+                .roles("USERS")
                 .build();
         return new InMemoryUserDetailsManager(user);
     }
 
+//    @Bean
+//    public WebSecurityCustomizer webSecurityCustomizer() {
+//        return (web) -> web.ignoring().requestMatchers("/h2-console/**");
+//    }
 
 //    @Bean
 //    public PasswordEncoder passwordEncoder() {
