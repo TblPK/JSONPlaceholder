@@ -1,0 +1,5 @@
+databaseChangeLog:
+  - include:
+      file: classpath:create-tables.yml
+  - include:
+      file: classpath:insert-data.yml

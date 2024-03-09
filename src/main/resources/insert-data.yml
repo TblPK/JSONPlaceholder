@@ -1,0 +1,77 @@
+databaseChangeLog:
+  - changeSet:
+      id: insertData
+      author: me
+      changes:
+        - insert:
+            tableName: role
+            columns:
+              - column:
+                  name: name
+                  value: ROLE_ADMIN
+        - insert:
+            tableName: role
+            columns:
+              - column:
+                  name: name
+                  value: ROLE_USER
+        - insert:
+            tableName: role
+            columns:
+              - column:
+                  name: name
+                  value: ROLE_ALBUM
+        - insert:
+            tableName: role
+            columns:
+              - column:
+                  name: name
+                  value: ROLE_POST
+        - insert:
+            tableName: usr
+            columns:
+              - column:
+                  name: username
+                  value: admin
+              - column:
+                  name: password
+                  value: $2a$12$ZRmmth2zmB8DGID.jOqjfedWfXjGpzQgy7TlAiXGMITjxzx5upKQ2 #admin
+              - column:
+                  name: role_id
+                  value: "1"
+        - insert:
+            tableName: usr
+            columns:
+              - column:
+                  name: username
+                  value: user
+              - column:
+                  name: password
+                  value: $2a$12$ZMHeUz4Hgg4qATm4bxERrOKepr4RudDiJDHi3ehSwgmD.uZ9HpOTq #user
+              - column:
+                  name: role_id
+                  value: "2"
+        - insert:
+            tableName: usr
+            columns:
+              - column:
+                  name: username
+                  value: album
+              - column:
+                  name: password
+                  value: $2a$12$RLFxaAAAgGdexa8FxeDbouOiXpPmnjlvxmZkCRNT0PpjcTX7usA6K #album
+              - column:
+                  name: role_id
+                  value: "3"
+        - insert:
+            tableName: usr
+            columns:
+              - column:
+                  name: username
+                  value: post
+              - column:
+                  name: password
+                  value: $2a$12$BOf0hoIwtO2Kk5cvdoYmmeHM2HkIbE7fYSLI16NwBYLm4YdRTYwZi #post
+              - column:
+                  name: role_id
+                  value: "4"
