@@ -1,7 +1,7 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.Post;
-import com.example.demo.service.PostService;
+import com.example.demo.entity.PostDto;
+import com.example.demo.service.JSPostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -14,33 +14,33 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PostController {
 
-    private final PostService postService;
+    private final JSPostService JSPostService;
 
     @GetMapping
-    Mono<List<Post>> findAll() {
-        return postService.findAll();
+    Mono<List<PostDto>> findAll() {
+        return JSPostService.findAll();
     }
 
     @GetMapping("/{id}")
-    Mono<Post> findById(@PathVariable String id) {
-        return postService.findById(id);
+    Mono<PostDto> findById(@PathVariable String id) {
+        return JSPostService.findById(id);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    Mono<Post> create(@RequestBody Post post) {
-        return postService.create(post);
+    Mono<PostDto> create(@RequestBody PostDto postDto) {
+        return JSPostService.create(postDto);
     }
 
     @PutMapping("/{id}")
-    Mono<Post> update(@PathVariable String id, @RequestBody Post post) {
-        return postService.update(id, post);
+    Mono<PostDto> update(@PathVariable String id, @RequestBody PostDto postDto) {
+        return JSPostService.update(id, postDto);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     void delete(@PathVariable String id) {
-        postService.delete(id);
+        JSPostService.delete(id);
     }
 
 }

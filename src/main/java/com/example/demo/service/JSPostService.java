@@ -1,6 +1,6 @@
 package com.example.demo.service;
 
-import com.example.demo.model.Post;
+import com.example.demo.entity.PostDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
@@ -11,11 +11,11 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class PostService implements JsonPlaceholderService<Post> {
+public class JSPostService implements JsonPlaceholderService<PostDto> {
     private final String HTTP_METHOD = "posts";
     private final WebClient webClient;
 
-    public Mono<List<Post>> findAll() {
+    public Mono<List<PostDto>> findAll() {
         return webClient
                 .get()
                 .uri("/{method}/", HTTP_METHOD)
@@ -24,30 +24,30 @@ public class PostService implements JsonPlaceholderService<Post> {
                 });
     }
 
-    public Mono<Post> findById(String id) {
+    public Mono<PostDto> findById(String id) {
         return webClient
                 .get()
                 .uri("/{method}/{id}", HTTP_METHOD, id)
                 .retrieve()
-                .bodyToMono(Post.class);
+                .bodyToMono(PostDto.class);
     }
 
-    public Mono<Post> create(Post post) {
+    public Mono<PostDto> create(PostDto postDto) {
         return webClient
                 .post()
                 .uri("/{method}/", HTTP_METHOD)
-                .bodyValue(post)
+                .bodyValue(postDto)
                 .retrieve()
-                .bodyToMono(Post.class);
+                .bodyToMono(PostDto.class);
     }
 
-    public Mono<Post> update(String id, Post post) {
+    public Mono<PostDto> update(String id, PostDto postDto) {
         return webClient
                 .put()
                 .uri("/{method}/{id}", HTTP_METHOD, id)
-                .bodyValue(post)
+                .bodyValue(postDto)
                 .retrieve()
-                .bodyToMono(Post.class);
+                .bodyToMono(PostDto.class);
     }
 
     public void delete(String id) {

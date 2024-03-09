@@ -1,6 +1,6 @@
-package com.example.demo.model;
+package com.example.demo.entity;
 
-public record User(
+public record UserDto(
         Integer id,
         String name,
         String username,

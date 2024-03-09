@@ -1,59 +1,68 @@
 package com.example.demo.service;
 
-import com.example.demo.model.User;
+import com.example.demo.entity.Role;
+import com.example.demo.entity.User;
+import com.example.demo.repository.RoleRepository;
+import com.example.demo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class UserService implements JsonPlaceholderService<User> {
-    private final String HTTP_METHOD = "users";
-    private final WebClient webClient;
+public class UserService implements UserDetailsService {
 
-    public Mono<List<User>> findAll() {
-        return webClient
-                .get()
-                .uri("/{method}/", HTTP_METHOD)
-                .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<>() {
-                });
+    private final UserRepository userRepository;
+
+    private final RoleRepository roleRepository;
+
+    private final PasswordEncoder passwordEncoder;
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userRepository.findByUsername(username);
+
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found");
+        }
+
+        return user;
     }
 
-    public Mono<User> findById(String id) {
-        return webClient
-                .get()
-                .uri("/{method}/{id}", HTTP_METHOD, id)
-                .retrieve()
-                .bodyToMono(User.class);
+    public User findUserById(Long userId) {
+        Optional<User> userFromDb = userRepository.findById(userId);
+        return userFromDb.orElse(new User());
     }
 
-    public Mono<User> create(User User) {
-        return webClient
-                .post()
-                .uri("/{method}/", HTTP_METHOD)
-                .bodyValue(User)
-                .retrieve()
-                .bodyToMono(User.class);
+    public List<User> allUsers() {
+        return userRepository.findAll();
     }
 
-    public Mono<User> update(String id, User User) {
-        return webClient
-                .put()
-                .uri("/{method}/{id}", HTTP_METHOD, id)
-                .bodyValue(User)
-                .retrieve()
-                .bodyToMono(User.class);
+    public boolean saveUser(User user) {
+        User userFromDB = userRepository.findByUsername(user.getUsername());
+
+        if (userFromDB != null) {
+            return false;
+        }
+
+        user.setRoles(new Role());
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        userRepository.save(user);
+        return true;
     }
 
-    public void delete(String id) {
-        webClient
-                .delete()
-                .uri("/{method}/{id}", HTTP_METHOD, id);
+    public boolean deleteUser(Long userId) {
+        if (userRepository.findById(userId).isPresent()) {
+            userRepository.deleteById(userId);
+            return true;
+        }
+        return false;
     }
 
 }

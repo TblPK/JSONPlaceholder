@@ -1,7 +1,7 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.User;
-import com.example.demo.service.UserService;
+import com.example.demo.entity.UserDto;
+import com.example.demo.service.JSUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -14,33 +14,33 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserController {
 
-    private final UserService userService;
+    private final JSUserService JSUserService;
 
     @GetMapping
-    Mono<List<User>> findAll() {
-        return userService.findAll();
+    Mono<List<UserDto>> findAll() {
+        return JSUserService.findAll();
     }
 
     @GetMapping("/{id}")
-    Mono<User> findById(@PathVariable String id) {
-        return userService.findById(id);
+    Mono<UserDto> findById(@PathVariable String id) {
+        return JSUserService.findById(id);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    Mono<User> create(@RequestBody User user) {
-        return userService.create(user);
+    Mono<UserDto> create(@RequestBody UserDto userDto) {
+        return JSUserService.create(userDto);
     }
 
     @PutMapping("/{id}")
-    Mono<User> update(@PathVariable String id, @RequestBody User user) {
-        return userService.update(id, user);
+    Mono<UserDto> update(@PathVariable String id, @RequestBody UserDto userDto) {
+        return JSUserService.update(id, userDto);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     void delete(@PathVariable String id) {
-        userService.delete(id);
+        JSUserService.delete(id);
     }
 
 }
