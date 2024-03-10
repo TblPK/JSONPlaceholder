@@ -1,7 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.entity.AlbumDto;
-import com.example.demo.service.JSAlbumService;
+import com.example.demo.service.AlbumJService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -14,32 +14,32 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AlbumController {
 
-    private final JSAlbumService JSAlbumService;
+    private final AlbumJService AlbumJService;
 
     @GetMapping
     Mono<List<AlbumDto>> findAll() {
-        return JSAlbumService.findAll();
+        return AlbumJService.findAll();
     }
 
     @GetMapping("/{id}")
     Mono<AlbumDto> findById(@PathVariable String id) {
-        return JSAlbumService.findById(id);
+        return AlbumJService.findById(id);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     Mono<AlbumDto> create(@RequestBody AlbumDto albumDto) {
-        return JSAlbumService.create(albumDto);
+        return AlbumJService.create(albumDto);
     }
 
     @PutMapping("/{id}")
     Mono<AlbumDto> update(@PathVariable String id, @RequestBody AlbumDto albumDto) {
-        return JSAlbumService.update(id, albumDto);
+        return AlbumJService.update(id, albumDto);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     void delete(@PathVariable String id) {
-        JSAlbumService.delete(id);
+        AlbumJService.delete(id);
     }
 }

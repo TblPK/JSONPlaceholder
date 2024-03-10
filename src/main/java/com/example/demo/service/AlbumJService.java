@@ -1,6 +1,6 @@
 package com.example.demo.service;
 
-import com.example.demo.entity.PostDto;
+import com.example.demo.entity.AlbumDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
@@ -11,11 +11,11 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class JSPostService implements JsonPlaceholderService<PostDto> {
-    private final String HTTP_METHOD = "posts";
+public class AlbumJService implements JsonPlaceholderService<AlbumDto> {
+    private final String HTTP_METHOD = "albums";
     private final WebClient webClient;
 
-    public Mono<List<PostDto>> findAll() {
+    public Mono<List<AlbumDto>> findAll() {
         return webClient
                 .get()
                 .uri("/{method}/", HTTP_METHOD)
@@ -24,30 +24,30 @@ public class JSPostService implements JsonPlaceholderService<PostDto> {
                 });
     }
 
-    public Mono<PostDto> findById(String id) {
+    public Mono<AlbumDto> findById(String id) {
         return webClient
                 .get()
                 .uri("/{method}/{id}", HTTP_METHOD, id)
                 .retrieve()
-                .bodyToMono(PostDto.class);
+                .bodyToMono(AlbumDto.class);
     }
 
-    public Mono<PostDto> create(PostDto postDto) {
+    public Mono<AlbumDto> create(AlbumDto albumDto) {
         return webClient
                 .post()
                 .uri("/{method}/", HTTP_METHOD)
-                .bodyValue(postDto)
+                .bodyValue(albumDto)
                 .retrieve()
-                .bodyToMono(PostDto.class);
+                .bodyToMono(AlbumDto.class);
     }
 
-    public Mono<PostDto> update(String id, PostDto postDto) {
+    public Mono<AlbumDto> update(String id, AlbumDto albumDto) {
         return webClient
                 .put()
                 .uri("/{method}/{id}", HTTP_METHOD, id)
-                .bodyValue(postDto)
+                .bodyValue(albumDto)
                 .retrieve()
-                .bodyToMono(PostDto.class);
+                .bodyToMono(AlbumDto.class);
     }
 
     public void delete(String id) {
@@ -55,5 +55,4 @@ public class JSPostService implements JsonPlaceholderService<PostDto> {
                 .delete()
                 .uri("/{method}/{id}", HTTP_METHOD, id);
     }
-
 }

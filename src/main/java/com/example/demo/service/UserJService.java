@@ -11,7 +11,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class JSUserService implements JsonPlaceholderService<UserDto> {
+public class UserJService implements JsonPlaceholderService<UserDto> {
     private final String HTTP_METHOD = "users";
     private final WebClient webClient;
 

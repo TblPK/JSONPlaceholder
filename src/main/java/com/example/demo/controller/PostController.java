@@ -1,7 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.entity.PostDto;
-import com.example.demo.service.JSPostService;
+import com.example.demo.service.PostJService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -14,33 +14,33 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PostController {
 
-    private final JSPostService JSPostService;
+    private final PostJService PostJService;
 
     @GetMapping
     Mono<List<PostDto>> findAll() {
-        return JSPostService.findAll();
+        return PostJService.findAll();
     }
 
     @GetMapping("/{id}")
     Mono<PostDto> findById(@PathVariable String id) {
-        return JSPostService.findById(id);
+        return PostJService.findById(id);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     Mono<PostDto> create(@RequestBody PostDto postDto) {
-        return JSPostService.create(postDto);
+        return PostJService.create(postDto);
     }
 
     @PutMapping("/{id}")
     Mono<PostDto> update(@PathVariable String id, @RequestBody PostDto postDto) {
-        return JSPostService.update(id, postDto);
+        return PostJService.update(id, postDto);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     void delete(@PathVariable String id) {
-        JSPostService.delete(id);
+        PostJService.delete(id);
     }
 
 }

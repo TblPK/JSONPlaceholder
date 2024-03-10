@@ -25,14 +25,15 @@ public class SecurityConfig {
                         .requestMatchers("/api/posts/**").hasAnyRole("POST", "ADMIN")
                         .requestMatchers("/api/users/**").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/api/albums/**").hasAnyRole("ALBUM", "ADMIN")
-                        .requestMatchers(PathRequest.toH2Console()).permitAll()
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        .requestMatchers(PathRequest.toH2Console()).hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
                 .csrf(csrf -> csrf.ignoringRequestMatchers("/h2-console/**"))
-                .userDetailsService(userService)
                 .formLogin(Customizer.withDefaults())
                 .httpBasic(Customizer.withDefaults())
+                .userDetailsService(userService)
                 .build();
     }
 }

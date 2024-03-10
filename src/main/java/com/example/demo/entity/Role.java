@@ -1,5 +1,6 @@
 package com.example.demo.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -15,6 +16,7 @@ public class Role implements GrantedAuthority {
     private String name;
 
     @Override
+    @JsonIgnore
     public String getAuthority() {
         return getName();
     }
