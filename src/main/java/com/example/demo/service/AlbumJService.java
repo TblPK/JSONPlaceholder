@@ -4,8 +4,7 @@ import com.example.demo.entity.AlbumDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
+import org.springframework.web.client.RestClient;
 
 import java.util.List;
 
@@ -13,45 +12,45 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AlbumJService implements JsonPlaceholderService<AlbumDto> {
     private final String HTTP_METHOD = "albums";
-    private final WebClient webClient;
+    private final RestClient restClient;
 
-    public Mono<List<AlbumDto>> findAll() {
-        return webClient
+    public List<AlbumDto> findAll() {
+        return restClient
                 .get()
                 .uri("/{method}/", HTTP_METHOD)
                 .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<>() {
+                .body(new ParameterizedTypeReference<>() {
                 });
     }
 
-    public Mono<AlbumDto> findById(String id) {
-        return webClient
+    public AlbumDto findById(String id) {
+        return restClient
                 .get()
                 .uri("/{method}/{id}", HTTP_METHOD, id)
                 .retrieve()
-                .bodyToMono(AlbumDto.class);
+                .body(AlbumDto.class);
     }
 
-    public Mono<AlbumDto> create(AlbumDto albumDto) {
-        return webClient
+    public AlbumDto create(AlbumDto albumDto) {
+        return restClient
                 .post()
                 .uri("/{method}/", HTTP_METHOD)
-                .bodyValue(albumDto)
+                .body(albumDto)
                 .retrieve()
-                .bodyToMono(AlbumDto.class);
+                .body(AlbumDto.class);
     }
 
-    public Mono<AlbumDto> update(String id, AlbumDto albumDto) {
-        return webClient
+    public AlbumDto update(String id, AlbumDto albumDto) {
+        return restClient
                 .put()
                 .uri("/{method}/{id}", HTTP_METHOD, id)
-                .bodyValue(albumDto)
+                .body(albumDto)
                 .retrieve()
-                .bodyToMono(AlbumDto.class);
+                .body(AlbumDto.class);
     }
 
     public void delete(String id) {
-        webClient
+        restClient
                 .delete()
                 .uri("/{method}/{id}", HTTP_METHOD, id);
     }

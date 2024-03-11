@@ -4,56 +4,64 @@ import com.example.demo.entity.PostDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
+import org.springframework.web.client.RestClient;
 
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 @RequiredArgsConstructor
 public class PostJService implements JsonPlaceholderService<PostDto> {
     private final String HTTP_METHOD = "posts";
-    private final WebClient webClient;
+    private final RestClient restClient;
+    private final Map<String, PostDto> cache = new ConcurrentHashMap<>();
 
-    public Mono<List<PostDto>> findAll() {
-        return webClient
+    public List<PostDto> findAll() {
+        return restClient
                 .get()
                 .uri("/{method}/", HTTP_METHOD)
                 .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<>() {
+                .body(new ParameterizedTypeReference<>() {
                 });
     }
 
-    public Mono<PostDto> findById(String id) {
-        return webClient
+    public PostDto findById(String id) {
+        if (cache.containsKey(id)) {
+            return cache.get(id);
+        }
+
+        return restClient
                 .get()
                 .uri("/{method}/{id}", HTTP_METHOD, id)
                 .retrieve()
-                .bodyToMono(PostDto.class);
+                .body(PostDto.class);
     }
 
-    public Mono<PostDto> create(PostDto postDto) {
-        return webClient
+    public PostDto create(PostDto postDto) {
+        return restClient
                 .post()
                 .uri("/{method}/", HTTP_METHOD)
-                .bodyValue(postDto)
+                .body(postDto)
                 .retrieve()
-                .bodyToMono(PostDto.class);
+                .body(PostDto.class);
     }
 
-    public Mono<PostDto> update(String id, PostDto postDto) {
-        return webClient
+    public PostDto update(String id, PostDto postDto) {
+        return restClient
                 .put()
                 .uri("/{method}/{id}", HTTP_METHOD, id)
-                .bodyValue(postDto)
+                .body(postDto)
                 .retrieve()
-                .bodyToMono(PostDto.class);
+                .body(PostDto.class);
     }
 
     public void delete(String id) {
-        webClient
+        restClient
                 .delete()
-                .uri("/{method}/{id}", HTTP_METHOD, id);
+                .uri("/{method}/{id}", HTTP_METHOD, id)
+                .retrieve()
+                .toBodilessEntity();
     }
 
 }

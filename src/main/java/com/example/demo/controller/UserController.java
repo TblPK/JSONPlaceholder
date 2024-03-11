@@ -5,7 +5,6 @@ import com.example.demo.service.UserJService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Mono;
 
 import java.util.List;
 
@@ -17,23 +16,23 @@ public class UserController {
     private final UserJService UserJService;
 
     @GetMapping
-    Mono<List<UserDto>> findAll() {
+    List<UserDto> findAll() {
         return UserJService.findAll();
     }
 
     @GetMapping("/{id}")
-    Mono<UserDto> findById(@PathVariable String id) {
+    UserDto findById(@PathVariable String id) {
         return UserJService.findById(id);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    Mono<UserDto> create(@RequestBody UserDto userDto) {
+    UserDto create(@RequestBody UserDto userDto) {
         return UserJService.create(userDto);
     }
 
     @PutMapping("/{id}")
-    Mono<UserDto> update(@PathVariable String id, @RequestBody UserDto userDto) {
+    UserDto update(@PathVariable String id, @RequestBody UserDto userDto) {
         return UserJService.update(id, userDto);
     }
 

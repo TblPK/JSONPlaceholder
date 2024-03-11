@@ -4,8 +4,7 @@ import com.example.demo.entity.UserDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
+import org.springframework.web.client.RestClient;
 
 import java.util.List;
 
@@ -13,45 +12,45 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserJService implements JsonPlaceholderService<UserDto> {
     private final String HTTP_METHOD = "users";
-    private final WebClient webClient;
+    private final RestClient restClient;
 
-    public Mono<List<UserDto>> findAll() {
-        return webClient
+    public List<UserDto> findAll() {
+        return restClient
                 .get()
                 .uri("/{method}/", HTTP_METHOD)
                 .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<>() {
+                .body(new ParameterizedTypeReference<>() {
                 });
     }
 
-    public Mono<UserDto> findById(String id) {
-        return webClient
+    public UserDto findById(String id) {
+        return restClient
                 .get()
                 .uri("/{method}/{id}", HTTP_METHOD, id)
                 .retrieve()
-                .bodyToMono(UserDto.class);
+                .body(UserDto.class);
     }
 
-    public Mono<UserDto> create(UserDto UserDto) {
-        return webClient
+    public UserDto create(UserDto UserDto) {
+        return restClient
                 .post()
                 .uri("/{method}/", HTTP_METHOD)
-                .bodyValue(UserDto)
+                .body(UserDto)
                 .retrieve()
-                .bodyToMono(UserDto.class);
+                .body(UserDto.class);
     }
 
-    public Mono<UserDto> update(String id, UserDto UserDto) {
-        return webClient
+    public UserDto update(String id, UserDto UserDto) {
+        return restClient
                 .put()
                 .uri("/{method}/{id}", HTTP_METHOD, id)
-                .bodyValue(UserDto)
+                .body(UserDto)
                 .retrieve()
-                .bodyToMono(UserDto.class);
+                .body(UserDto.class);
     }
 
     public void delete(String id) {
-        webClient
+        restClient
                 .delete()
                 .uri("/{method}/{id}", HTTP_METHOD, id);
     }
