@@ -2,6 +2,9 @@ package com.example.demo.service;
 
 import com.example.demo.entity.Role;
 import com.example.demo.entity.User;
+import com.example.demo.exception.RoleNotFoundException;
+import com.example.demo.exception.UserAlreadyExistsException;
+import com.example.demo.exception.UserNotFoundException;
 import com.example.demo.repository.RoleRepository;
 import com.example.demo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,14 +25,9 @@ public class UserService implements UserDetailsService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws NullPointerException {
-        User user = userRepository.findByUsername(username);
-
-        if (user == null) {
-            throw new NullPointerException("User not found");
-        }
-
-        return user;
+    public UserDetails loadUserByUsername(String username) {
+        Optional<User> user = userRepository.findByUsername(username);
+        return user.orElseThrow(() -> new UserNotFoundException("User not found by username"));
     }
 
     public List<User> findAll() {
@@ -38,34 +36,25 @@ public class UserService implements UserDetailsService {
 
     public User findUserById(Long userId) {
         Optional<User> user = userRepository.findById(userId);
-        return user.orElseThrow(() -> new NullPointerException("User not found"));
+        return user.orElseThrow(() -> new UserNotFoundException("User not found by userID"));
     }
 
     public User create(User user) {
-        User userFromDB = userRepository.findByUsername(user.getUsername());
-        Optional<Role> role = roleRepository.findById(user.getRoles().getId());
+        userRepository.findByUsername(user.getUsername()).ifPresent(u -> {
+            throw new UserAlreadyExistsException("User Already exists");
+        });
 
-        if (userFromDB != null) {
-            throw new NullPointerException("User Already exists");
-        }
-        if (role.isEmpty()) {
-            throw new NullPointerException("Role not exists");
-        }
-
-        user.setRoles(role.get());
+        user.setRoles(getRole(user.getRoles().getId()));
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
         return user;
     }
 
     public User update(Long id, User user) {
-        User userFromDB = userRepository.findByUsername(user.getUsername());
+        userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not exist"));
 
-        if (userFromDB != null) {
-
-        }
-
-        user.setRoles(new Role());
+        user.setId(id);
+        user.setRoles(getRole(user.getRoles().getId()));
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
         return user;
@@ -74,7 +63,13 @@ public class UserService implements UserDetailsService {
     public void delete(Long userId) {
         if (userRepository.findById(userId).isPresent()) {
             userRepository.deleteById(userId);
+        } else {
+            throw new UserNotFoundException("User not found by username");
         }
     }
 
+    private Role getRole(Long id) {
+        Optional<Role> role = roleRepository.findById(id);
+        return role.orElseThrow(() -> new RoleNotFoundException("Role not exists"));
+    }
 }
