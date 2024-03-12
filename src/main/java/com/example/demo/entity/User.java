@@ -10,6 +10,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.Collections;
 
+/**
+ * Entity class representing a user.
+ */
 @Entity
 @Table(name = "usr")
 @Data
@@ -19,10 +22,21 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
+
+    /**
+     * The username of the user.
+     */
     private String username;
+
+    /**
+     * The password of the user.
+     */
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
+    /**
+     * The roles assigned to the user.
+     */
     @JoinColumn(name = "role_id")
     @ManyToOne(fetch = FetchType.EAGER)
     private Role roles;

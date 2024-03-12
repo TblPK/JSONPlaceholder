@@ -12,6 +12,9 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 
+/**
+ * Configuration class for Spring Security.
+ */
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -19,6 +22,13 @@ public class SecurityConfig {
 
     private final UserService userService;
 
+    /**
+     * Configures security filters and rules.
+     *
+     * @param http The HttpSecurity object.
+     * @return The SecurityFilterChain.
+     * @throws Exception If an error occurs during configuration.
+     */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http

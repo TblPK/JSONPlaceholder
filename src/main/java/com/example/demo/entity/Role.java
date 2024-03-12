@@ -8,15 +8,27 @@ import jakarta.persistence.Table;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 
+/**
+ * Entity class representing a user role.
+ */
 @Entity
 @Table(name = "role")
 @Data
 public class Role implements GrantedAuthority {
     @Id
     private Long id;
+
+    /**
+     * The name of the role.
+     */
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String name;
 
+    /**
+     * Retrieves the authority of the role.
+     *
+     * @return The name of the role.
+     */
     @Override
     @JsonIgnore
     public String getAuthority() {
