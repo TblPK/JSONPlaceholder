@@ -1,7 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.entity.User;
-import com.example.demo.service.UserService;
+import com.example.demo.service.UserAdminService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -16,16 +16,16 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AdminController {
 
-    private final UserService userService;
+    private final UserAdminService userAdminService;
 
     /**
      * Retrieves all users.
      *
      * @return List of User entities.
      */
-    @GetMapping
+    @GetMapping("/")
     List<User> findAll() {
-        return userService.findAll();
+        return userAdminService.findAll();
     }
 
     /**
@@ -35,7 +35,7 @@ public class AdminController {
      */
     @GetMapping("/{id}")
     User findById(@PathVariable Long id) {
-        return userService.findUserById(id);
+        return userAdminService.findUserById(id);
     }
 
     /**
@@ -43,10 +43,10 @@ public class AdminController {
      * @param user The User entity to create.
      * @return The created User entity.
      */
-    @PostMapping
+    @PostMapping("/")
     @ResponseStatus(HttpStatus.CREATED)
     User create(@RequestBody User user) {
-        return userService.create(user);
+        return userAdminService.create(user);
     }
 
     /**
@@ -57,7 +57,7 @@ public class AdminController {
      */
     @PutMapping("/{id}")
     User update(@PathVariable Long id, @RequestBody User user) {
-        return userService.update(id, user);
+        return userAdminService.update(id, user);
     }
 
     /**
@@ -67,6 +67,6 @@ public class AdminController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     void delete(@PathVariable Long id) {
-        userService.delete(id);
+        userAdminService.delete(id);
     }
 }

@@ -1,6 +1,6 @@
 package com.example.demo.config;
 
-import com.example.demo.service.UserService;
+import com.example.demo.service.UserAdminService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -20,7 +20,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final UserService userService;
+    private final UserAdminService userAdminService;
 
     /**
      * Configures security filters and rules.
@@ -44,7 +44,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(Customizer.withDefaults())
                 .httpBasic(Customizer.withDefaults())
-                .userDetailsService(userService)
+                .userDetailsService(userAdminService)
                 .build();
     }
 }

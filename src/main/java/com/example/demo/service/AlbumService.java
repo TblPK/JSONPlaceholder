@@ -1,23 +1,20 @@
 package com.example.demo.service;
 
-import com.example.demo.entity.PostDto;
+import com.example.demo.entity.AlbumDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 @RequiredArgsConstructor
-public class PostJService implements JsonPlaceholderService<PostDto> {
-    private final String HTTP_METHOD = "posts";
+public class AlbumService implements JsonPlaceholderService<AlbumDto> {
+    private final String HTTP_METHOD = "albums";
     private final RestClient restClient;
-    private final Map<String, PostDto> cache = new ConcurrentHashMap<>();
 
-    public List<PostDto> findAll() {
+    public List<AlbumDto> findAll() {
         return restClient
                 .get()
                 .uri("/{method}/", HTTP_METHOD)
@@ -26,42 +23,35 @@ public class PostJService implements JsonPlaceholderService<PostDto> {
                 });
     }
 
-    public PostDto findById(String id) {
-        if (cache.containsKey(id)) {
-            return cache.get(id);
-        }
-
+    public AlbumDto findById(String id) {
         return restClient
                 .get()
                 .uri("/{method}/{id}", HTTP_METHOD, id)
                 .retrieve()
-                .body(PostDto.class);
+                .body(AlbumDto.class);
     }
 
-    public PostDto create(PostDto postDto) {
+    public AlbumDto create(AlbumDto albumDto) {
         return restClient
                 .post()
                 .uri("/{method}/", HTTP_METHOD)
-                .body(postDto)
+                .body(albumDto)
                 .retrieve()
-                .body(PostDto.class);
+                .body(AlbumDto.class);
     }
 
-    public PostDto update(String id, PostDto postDto) {
+    public AlbumDto update(String id, AlbumDto albumDto) {
         return restClient
                 .put()
                 .uri("/{method}/{id}", HTTP_METHOD, id)
-                .body(postDto)
+                .body(albumDto)
                 .retrieve()
-                .body(PostDto.class);
+                .body(AlbumDto.class);
     }
 
     public void delete(String id) {
         restClient
                 .delete()
-                .uri("/{method}/{id}", HTTP_METHOD, id)
-                .retrieve()
-                .toBodilessEntity();
+                .uri("/{method}/{id}", HTTP_METHOD, id);
     }
-
 }
