@@ -2,21 +2,24 @@ package com.example.demo.service;
 
 import com.example.demo.entity.PostDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 @RequiredArgsConstructor
+@CacheConfig(cacheNames = {"postCache"})
 public class PostService implements JsonPlaceholderService<PostDto> {
     private final String HTTP_METHOD = "posts";
     private final RestClient restClient;
-    private final Map<String, PostDto> cache = new ConcurrentHashMap<>();
 
+    @Cacheable()
     public List<PostDto> findAll() {
         return restClient
                 .get()
@@ -26,11 +29,8 @@ public class PostService implements JsonPlaceholderService<PostDto> {
                 });
     }
 
+    @Cacheable(key = "#id")
     public PostDto findById(String id) {
-        if (cache.containsKey(id)) {
-            return cache.get(id);
-        }
-
         return restClient
                 .get()
                 .uri("/{method}/{id}", HTTP_METHOD, id)
@@ -38,6 +38,7 @@ public class PostService implements JsonPlaceholderService<PostDto> {
                 .body(PostDto.class);
     }
 
+    @CachePut(key = "#result.id")
     public PostDto create(PostDto postDto) {
         return restClient
                 .post()
@@ -47,6 +48,7 @@ public class PostService implements JsonPlaceholderService<PostDto> {
                 .body(PostDto.class);
     }
 
+    @CachePut(key = "#id")
     public PostDto update(String id, PostDto postDto) {
         return restClient
                 .put()
@@ -56,12 +58,10 @@ public class PostService implements JsonPlaceholderService<PostDto> {
                 .body(PostDto.class);
     }
 
+    @CacheEvict(key = "#id")
     public void delete(String id) {
         restClient
                 .delete()
-                .uri("/{method}/{id}", HTTP_METHOD, id)
-                .retrieve()
-                .toBodilessEntity();
+                .uri("/{method}/{id}", HTTP_METHOD, id);
     }
-
 }

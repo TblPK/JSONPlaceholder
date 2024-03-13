@@ -14,3 +14,9 @@ spring:
     open-in-view: false
   liquibase:
     change-log: classpath:liquibase.yml
+
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
